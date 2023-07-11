@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Logs
+*.log
+*.tlog
+
+# Other
+*.vsidx
+*.ipch
+*.lock
+Debug/
