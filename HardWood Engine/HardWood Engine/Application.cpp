@@ -1,7 +1,16 @@
+#define GLFW_INCLUDE_NONE
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <stdio.h>
+
+
+void Error_Callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
 
 int main(void)
 {
@@ -12,9 +21,12 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Christine Is The Fartiest: The Game", NULL, NULL);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Christine Is The Best: The Game", NULL, NULL);
     if (!window)
     {
+        glfwSetErrorCallback(Error_Callback);
         glfwTerminate();
         return -1;
     }
