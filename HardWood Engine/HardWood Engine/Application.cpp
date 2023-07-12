@@ -85,7 +85,6 @@ int main(void)
         vec2 b = { 20,6 };
         vec2 r;
         vec2_add(r, a,b);
-
         vec4_print(a);
 
         /* Render here */
