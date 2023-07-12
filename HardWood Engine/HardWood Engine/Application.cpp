@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
 #include <stdio.h>
 
 #include "wMath.h"
@@ -80,6 +81,13 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        vec4 a = { 0,0,0,0 };
+        vec2 b = { 20,6 };
+        vec2 r;
+        vec2_add(r, a,b);
+
+        vec4_print(a);
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
