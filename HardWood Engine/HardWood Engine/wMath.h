@@ -60,12 +60,6 @@ WMATH_H_FUNC float vec##n##_magnitude(const vec##n a)\
 	}\
 	return sqrt(b);\
 }\
-/* Normalize */\
-WMATH_H_FUNC void vec##n##_normalize(vec##n ret, const vec##n a)\
-{\
-	float s = 1.0f / vec##n##_len(a);\
-	vec##n##_scale(ret,a,s);\
-}\
 /* Multiplication Inner - Used for Normalizing */\
 WMATH_H_FUNC float vec##n##_mulInner(const vec##n a, const vec##n b)\
 {\
@@ -81,6 +75,12 @@ WMATH_H_FUNC float vec##n##_len(const vec##n a)\
 { \
 	return sqrtf(vec##n##_mulInner(a,a));\
 } \
+/* Normalize */\
+WMATH_H_FUNC void vec##n##_normalize(vec##n ret, const vec##n a)\
+{\
+	float s = 1.0f / vec##n##_len(a);\
+	vec##n##_scale(ret,a,s);\
+}\
 /* Add */\
 WMATH_H_FUNC void vec##n##_add(vec##n ret, const vec##n a, const vec##n b)\
 {\
@@ -98,7 +98,7 @@ WMATH_H_FUNC void vec##n##_sub(vec##n ret, const vec##n a, const vec##n b)\
 	}\
 }\
 /* Multiplication */\
-WMATH_H_FUNC float vec##n##_mul(vec##n ret, const vec##n a, const vec##n b)\
+WMATH_H_FUNC void vec##n##_mul(vec##n ret, const vec##n a, const vec##n b)\
 {\
 	for(int i = 0; i < n;++i)\
 	{\
@@ -106,7 +106,7 @@ WMATH_H_FUNC float vec##n##_mul(vec##n ret, const vec##n a, const vec##n b)\
 	}\
 }\
 /* Division */\
-WMATH_H_FUNC float vec##n##_div(vec##n ret, const vec##n a, const vec##n b)\
+WMATH_H_FUNC void vec##n##_div(vec##n ret, const vec##n a, const vec##n b)\
 {\
 	for(int i = 0; i < n;++i)\
 	{\
@@ -114,8 +114,26 @@ WMATH_H_FUNC float vec##n##_div(vec##n ret, const vec##n a, const vec##n b)\
 		ret[i] = a[i]*s;\
 	}\
 }\
+/* Dot Product */\
+WMATH_H_FUNC float vec##n##_dot(const vec##n a, const vec##n b)\
+{\
+	float ret = 0.0f;\
+	for(int i = 0; i < n; ++i)\
+	{\
+		ret += a[i] * b[i];\
+	}\
+	return ret; \
+}\
+/* Duplicate */\
+WMATH_H_FUNC void vec##n##_dup(vec##n ret, const vec##n a)\
+{\
+	for(int i = 0; i < n;++i)\
+	{\
+		ret[i] = a[i];\
+	}\
+}\
 /* print */\
-WMATH_H_FUNC void vec##n##_print(vec##n a)\
+WMATH_H_FUNC void vec##n##_print(const vec##n a)\
 {\
 	std::cout<< "Vector" << ##n << ": ";\
 	for(int i = 0; i < n; ++i)\
@@ -129,7 +147,6 @@ WMATH_H_FUNC void vec##n##_print(vec##n a)\
 WMATH_H_DEFINE_VEC(2);
 WMATH_H_DEFINE_VEC(3);
 WMATH_H_DEFINE_VEC(4);
-
 
 
 
@@ -166,6 +183,37 @@ WMATH_H_FUNC void mat3_scale(mat3 ret, const mat3 A, const float s)
 		vec3_scale(ret[i], A[i], s);
 	}
 }
+WMATH_H_FUNC void mat3_dup(mat3 ret, const mat3 A)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		vec3_dup(ret[i], A[i]);
+	}
+}
+WMATH_H_FUNC void mat3_mul(mat3 ret, const mat3 A, const mat3 B)
+{
+	mat3 temp;
+	for (int row = 0; row < 3; ++row)
+	{
+		for (int col = 0; col < 3; ++col)
+		{
+			temp[row][col] = 0.0f;
+			for (int k = 0; k < 3; ++k)
+			{
+				temp[row][col] += A[row][k] * B[k][col];
+			}
+		}
+	}
+	mat3_dup(ret,temp);
+}
+WMATH_H_FUNC void mat3_print( const mat3 A)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		vec3_print(A[i]);
+	}
+	std::cout << std::endl;
+}
 
 
 //------------------------- MATRIX 4X4 --------------------------------//
@@ -197,13 +245,50 @@ WMATH_H_FUNC void mat4_add(mat4 ret, const mat4 A, const mat4 B)
 		vec4_add(ret[i], A[i], B[i]);
 	}
 }
-
 WMATH_H_FUNC void mat4_sub(mat4 ret, const mat4 A, const mat4 B)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		vec4_sub(ret[i], A[i], B[i]);
 	}
+}
+WMATH_H_FUNC void mat4_scale(mat4 ret, const mat4 A, const float s)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		vec4_scale(ret[i], A[i], s);
+	}
+}
+WMATH_H_FUNC void mat4_dup(mat4 ret, const mat4 A)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		vec4_dup(ret[i], A[i]);
+	}
+}
+WMATH_H_FUNC void mat4_mul(mat4 ret, const mat4 A, const mat4 B)
+{
+	mat4 temp;
+	for (int row = 0; row < 4; ++row)
+	{
+		for (int col = 0; col < 4; ++col)
+		{
+			temp[row][col] = 0.0f;
+			for (int k = 0; k < 4; ++k)
+			{
+				temp[row][col] += A[row][k] * B[k][col];
+			}
+		}
+	}
+	mat4_dup(ret, temp);
+}
+WMATH_H_FUNC void mat4_print(const mat4 A)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		vec4_print(A[i]);
+	}
+	std::cout << std::endl;
 }
 
 

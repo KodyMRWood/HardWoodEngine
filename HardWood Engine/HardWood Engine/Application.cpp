@@ -81,12 +81,20 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        vec4 a = { 0,0,0,0 };
-        vec2 b = { 20,6 };
-        vec2 r;
-        vec2_add(r, a,b);
-        vec4_print(a);
+        mat4 newMat = { {1.0f,2.0f,3.0f,4.0f},
+                        {4.0f,5.0f,6.0f,1.0f},
+                        {4.0f,5.0f,6.0f,1.0f},
+                        {7.0f,8.0f,9.0f,1.0f}};
 
+        mat4 oldMat = { {9.0f,8.0f,7.0f,1.0f},
+                        {6.0f,5.0f,4.0f,1.0f},
+                        {6.0f,5.0f,4.0f,1.0f},
+                        {3.0f,2.0f,1.0f,1.0f}};
+        mat4 res;
+
+        mat4_mul(res,newMat,oldMat);
+        mat4_print(res);
+       
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
