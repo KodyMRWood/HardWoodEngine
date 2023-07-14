@@ -81,7 +81,7 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        mat4 newMat = { {1.0f,2.0f,3.0f,4.0f},
+       /* mat4 newMat = {{1.0f,2.0f,3.0f,4.0f},
                         {4.0f,5.0f,6.0f,1.0f},
                         {4.0f,5.0f,6.0f,1.0f},
                         {7.0f,8.0f,9.0f,1.0f}};
@@ -91,9 +91,17 @@ int main(void)
                         {6.0f,5.0f,4.0f,1.0f},
                         {3.0f,2.0f,1.0f,1.0f}};
         mat4 res;
-
+        
         mat4_mul(res,newMat,oldMat);
         mat4_print(res);
+        */
+
+        vec3 a = { 10,2,15 };
+        vec3 b = { 4,5,6 };
+        vec3 c = { 7,8,9 };
+        vec3 resVec;
+
+        std::cout << vec3_scalar_triple_product(a, b, c) << std::endl;
        
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);

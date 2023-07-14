@@ -124,6 +124,12 @@ WMATH_H_FUNC float vec##n##_dot(const vec##n a, const vec##n b)\
 	}\
 	return ret; \
 }\
+WMATH_H_FUNC float vec##n##_dotWithAngle(const vec##n a, const vec##n b, const float angle)\
+{\
+	float ret = 0.0f;\
+	ret = vec##n##_magnitude(a) * vec##n##_magnitude(b) * cos(angle);\
+	return ret;\
+}\
 /* Duplicate */\
 WMATH_H_FUNC void vec##n##_dup(vec##n ret, const vec##n a)\
 {\
@@ -143,12 +149,41 @@ WMATH_H_FUNC void vec##n##_print(const vec##n a)\
 	std::cout<< std::endl;\
 }\
 
+
 //Defining Vector2, Vector3 and Vector4 types
 WMATH_H_DEFINE_VEC(2);
 WMATH_H_DEFINE_VEC(3);
 WMATH_H_DEFINE_VEC(4);
 
+//------------------------- Vector 3 --------------------------------//
+WMATH_H_FUNC void vec3_cross(vec3 ret, const vec3 a, const vec3 b)
+{
+	ret[0] = { a[1] * b[2] - a[2] * b[1] };
+	ret[1] = { a[2] * b[0] - a[0] * b[2] };
+	ret[2] = { a[0] * b[1] - a[1] * b[0] };
+}
+//Used for area of a parallelipiped
+WMATH_H_FUNC float vec3_scalar_triple_product(const vec3 a, const vec3 b, const vec3 c)
+{
+	vec3 ret = { 0,0,0 };
+	vec3_cross(ret, a, b);
+	return vec3_dot(ret,c);
+}
 
+//------------------------- Vector 4 --------------------------------//
+WMATH_H_FUNC void vec4_cross(vec4 ret, const vec4 a, const vec4 b)
+{
+	ret[0] = { a[1] * b[2] - a[2] * b[1] };
+	ret[1] = { a[2] * b[0] - a[0] * b[2] };
+	ret[2] = { a[0] * b[1] - a[1] * b[0] };
+	ret[3] = { 1.0f};
+}
+WMATH_H_FUNC float vec4_scalar_triple_product(const vec4 a, const vec4 b, const vec4 c)
+{
+	vec4 ret = { 0,0,0,0 };
+	vec4_cross(ret, a, b);
+	return vec4_dot(ret, c);
+}
 
 //------------------------- MATRIX 3X3 --------------------------------//
 
@@ -159,7 +194,7 @@ typedef vec3 mat3[3];
 
 WMATH_H_FUNC void mat3_identity(mat3 ret)
 {
-	//TODO
+
 }
 
 WMATH_H_FUNC void mat3_add(mat3 ret, const mat3 A, const mat3 B)
@@ -206,7 +241,7 @@ WMATH_H_FUNC void mat3_mul(mat3 ret, const mat3 A, const mat3 B)
 	}
 	mat3_dup(ret,temp);
 }
-WMATH_H_FUNC void mat3_print( const mat3 A)
+WMATH_H_FUNC void mat3_print(const mat3 A)
 {
 	for (int i = 0; i < 3; ++i)
 	{
