@@ -23,5 +23,8 @@
     <ClInclude Include="wMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="linmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
