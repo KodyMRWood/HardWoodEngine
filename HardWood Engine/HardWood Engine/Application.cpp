@@ -11,6 +11,7 @@
 
 //Proprietary
 #include "linmath.h"
+#include "ShaderHandler.h";
 //#include "wMath.h"
 
 static const struct
@@ -114,13 +115,21 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-	glCompileShader(vertex_shader);
+	// Create Vertex Shader
+	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertex_shader_text, NULL);
+	if (!WShaderErrorCompiled(vertex_shader))
+	{
+		glDeleteShader(vertex_shader);
+		return -1;
+	}
 
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-	glCompileShader(fragment_shader);
+	// Create Fragment Shader
+	fragment_shader = wShaderInit(GL_FRAGMENT_SHADER, 1, &fragment_shader_text, NULL);
+	if (!WShaderErrorCompiled(fragment_shader))
+	{
+		glDeleteShader(fragment_shader);
+		return -1;
+	}
 
 	program = glCreateProgram();
 	glAttachShader(program, vertex_shader);
