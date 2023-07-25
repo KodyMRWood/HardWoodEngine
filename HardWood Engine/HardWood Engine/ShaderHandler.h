@@ -8,6 +8,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
 
 #ifndef SHADERHANDLER
 #define wShaderInit InitShader
@@ -28,6 +31,28 @@
 #define WSHADER_H_FUNC static inline
 #endif // WSHADER_NO_INLINE
 
+WSHADER_H_FUNC const char* LoadShader(const char* file)
+{
+	std::ifstream shaderFile;
+
+	std::string tempString = ""; 
+	std::string retString = ""; 
+	shaderFile.open(file); 
+	
+	if (shaderFile.fail())
+	{
+		exit(-1);
+	}
+	while (!shaderFile.eof())
+	{
+		std::getline(shaderFile, tempString);
+	}
+	shaderFile.close();
+	
+	const char* retChar = retString.c_str();
+	return retChar;
+}
+
 
 WSHADER_H_FUNC GLuint InitShader(const GLenum ShaderType, const GLsizei numStrings, const  GLchar* const* shaderName, const GLint* length)
 {
@@ -36,8 +61,6 @@ WSHADER_H_FUNC GLuint InitShader(const GLenum ShaderType, const GLsizei numStrin
 	glCompileShader(vertex_shader);
 	return vertex_shader;
 }
-
-
 
 
 //--- SHADER ERROR CHECKS ---//

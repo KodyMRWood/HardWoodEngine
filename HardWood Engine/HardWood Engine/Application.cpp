@@ -5,10 +5,8 @@
 //OpenGL Dependencies
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
 #include <stdio.h>
-
 //Proprietary
 #include "linmath.h"
 #include "ShaderHandler.h";
@@ -50,6 +48,9 @@ void main()
     color = vCol;
 })GLSL";
 
+const char* fileDir = "../HardWood Engine/BaseVertex.glsl";
+static const char* vertex_shader_text_test2 = LoadShader(fileDir);
+
 //--- Fragment Shader ---//
 static const char* fragment_shader_text =
 "#version 410\n"
@@ -88,7 +89,7 @@ int main(void)
 	/* Create a windowed mode window and its OpenGL context */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Christine Is The Best: The Game", NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL, NULL);
 	//window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Christine Is The Best: The Game", glfwGetPrimaryMonitor(), NULL); /* FULL SCREEN MODE */
 
 	if (!window) {
@@ -116,7 +117,9 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Create Vertex Shader
-	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertex_shader_text, NULL);
+	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertex_shader_text_test2, NULL);
+	std::cout << *vertex_shader_text_test2 << std::endl;
+
 	if (!WShaderErrorCompiled(vertex_shader))
 	{
 		glDeleteShader(vertex_shader);
