@@ -49,7 +49,7 @@ void main()
 })GLSL";
 
 const char* fileDir = "../HardWood Engine/BaseVertex.glsl";
-static const char* vertex_shader_text_test2 = LoadShader(fileDir);
+static const char* vertex_shader_text_test2 = LoadShaderChar(fileDir);
 
 //--- Fragment Shader ---//
 static const char* fragment_shader_text =
