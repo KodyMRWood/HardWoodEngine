@@ -15,6 +15,7 @@
 
 #ifndef SHADERHANDLER
 #define wShaderInit InitShader
+#define wShaderDelete DeleteShader
 //--- Error Defines ---//
 #define WShaderError ShaderCheckError
 #define WShaderErrorType ShaderCheckType
@@ -32,24 +33,13 @@
 #define WSHADER_H_FUNC static inline
 #endif // WSHADER_NO_INLINE
 
-WSHADER_H_FUNC const char* LoadShader(const char* file)
+WSHADER_H_FUNC std::string LoadShader(const char* file)
 {
 	std::ifstream shaderFile;
 
-	std::string tempString = ""; 
-	std::string retString = ""; 
-	char* retChar;
-	shaderFile.open(file); 
-	
-	std::ifstream in(file, std::ifstream::ate | std::ifstream::binary);
-	//retChar = (char*)malloc(in.tellg());
-
-	std::streampos begin, end;
-	begin = in.tellg();
-	in.seekg(0, std::ios::end);
-	end = in.tellg();
-	std::cout << end;
-	retChar = (char*)malloc(sizeof(char*) * end);
+	std::string tempString = "";
+	std::string retString = "";
+	shaderFile.open(file);
 
 	if (shaderFile.fail())
 	{
@@ -59,51 +49,24 @@ WSHADER_H_FUNC const char* LoadShader(const char* file)
 	while (!shaderFile.eof())
 	{
 		std::getline(shaderFile, tempString);
-		retChar += in.get();
-		retString += tempString;
+		retString += tempString+"\n";
 	}
 	shaderFile.close();
-	return retChar;
-	//return retString.c_str();
+	return retString;
 }
 
-WSHADER_H_FUNC const char* LoadShaderChar(const char* file)
+WSHADER_H_FUNC GLuint InitShader(const GLenum shaderType, const GLsizei numStrings, const  GLchar* const* shaderName, const GLint* length)
 {
-	char* retChar;
-
-	std::ifstream in(file, std::ifstream::ate | std::ifstream::binary);
-
-	std::streampos begin, end;
-	begin = in.tellg();
-	in.seekg(0, std::ios::end);
-	end = in.tellg();
-	retChar = (char*)malloc(sizeof(char*) * end);
-
-	//if (!in.is_open())
-	//{
-	//	exit(-1);
-	//}
-
-	while (!in.eof())
-	{
-		retChar += in.get();
-	}
-	in.close();
-	return retChar;
-}
-
-
-
-
-
-WSHADER_H_FUNC GLuint InitShader(const GLenum ShaderType, const GLsizei numStrings, const  GLchar* const* shaderName, const GLint* length)
-{
-	GLuint vertex_shader = glCreateShader(ShaderType);
+	GLuint vertex_shader = glCreateShader(shaderType);
 	glShaderSource(vertex_shader, numStrings, shaderName, length);
 	glCompileShader(vertex_shader);
 	return vertex_shader;
 }
 
+WSHADER_H_FUNC void DeleteShader(GLuint shader)
+{
+	glDeleteShader(shader);
+}
 
 //--- SHADER ERROR CHECKS ---//
 WSHADER_H_FUNC void ShaderCheckError(GLuint shader, GLenum errorCheck, GLint *ret)

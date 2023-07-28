@@ -1,12 +1,13 @@
 #define GLFW_INCLUDE_NONE
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 
 //OpenGL Dependencies
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdio.h>
+
 //Proprietary
 #include "linmath.h"
 #include "ShaderHandler.h";
@@ -24,42 +25,10 @@ static const struct
 };
 
 //--- Vertex Shader ---//
-static const char* vertex_shader_text =
-"#version 410\n"
-"uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec2 vPos;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    color = vCol;\n"
-"}\n";
-
-static const char* vertex_shader_text_test = R"GLSL(
-#version 410
-uniform mat4 MVP;
-attribute vec3 vCol;
-attribute vec2 vPos;
-varying vec3 color;
-void main()
-{
-    gl_Position = MVP * vec4(vPos, 0.0, 1.0);
-    color = vCol;
-})GLSL";
-
-const char* fileDir = "../HardWood Engine/BaseVertex.glsl";
-static const char* vertex_shader_text_test2 = LoadShaderChar(fileDir);
+static const char* fileDirVertex = "../HardWood Engine/BaseVertex.glsl";
 
 //--- Fragment Shader ---//
-static const char* fragment_shader_text =
-"#version 410\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color, 1.0);\n"
-"}\n";
-
+static const char* fileDirFragment = "../HardWood Engine/BaseFragment.glsl";
 
 void Error_Callback(int error, const char* description)
 {
@@ -85,12 +54,11 @@ int main(void)
 		return -1;
 	}
 
-
 	/* Create a windowed mode window and its OpenGL context */
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL, NULL);
-	//window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Christine Is The Best: The Game", glfwGetPrimaryMonitor(), NULL); /* FULL SCREEN MODE */
+	//window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWodo Engine", glfwGetPrimaryMonitor(), NULL); /* FULL SCREEN MODE */
 
 	if (!window) {
 		glfwTerminate();
@@ -117,20 +85,23 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Create Vertex Shader
-	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertex_shader_text_test2, NULL);
-	std::cout << *vertex_shader_text_test2 << std::endl;
-
+	std::string tempVertShader = LoadShader(fileDirVertex);
+	static const char* vertexContents = tempVertShader.c_str();
+	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertexContents, NULL);
+	
 	if (!WShaderErrorCompiled(vertex_shader))
 	{
-		glDeleteShader(vertex_shader);
+		wShaderDelete(vertex_shader);
 		return -1;
 	}
 
 	// Create Fragment Shader
-	fragment_shader = wShaderInit(GL_FRAGMENT_SHADER, 1, &fragment_shader_text, NULL);
+	std::string tempFragShader = LoadShader(fileDirFragment);
+	static const char* fragmentContents = tempFragShader.c_str();
+	fragment_shader = wShaderInit(GL_FRAGMENT_SHADER, 1, &fragmentContents, NULL);
 	if (!WShaderErrorCompiled(fragment_shader))
 	{
-		glDeleteShader(fragment_shader);
+		wShaderDelete(fragment_shader);
 		return -1;
 	}
 

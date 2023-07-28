@@ -46,5 +46,8 @@
     <None Include="BaseVertex.glsl">
       <Filter>Shader Files\Vertex</Filter>
     </None>
+    <None Include="BaseFragment.glsl">
+      <Filter>Shader Files\Fragment</Filter>
+    </None>
   </ItemGroup>
 </Project>

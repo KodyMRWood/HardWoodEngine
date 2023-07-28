@@ -148,6 +148,7 @@
     <ClInclude Include="wMath.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BaseFragment.glsl" />
     <None Include="BaseVertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
