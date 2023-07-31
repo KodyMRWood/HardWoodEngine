@@ -11,6 +11,7 @@
 //Proprietary
 #include "linmath.h"
 #include "ShaderHandler.h";
+#include "WindowHandler.h"
 //#include "wMath.h"
 
 static const struct
@@ -55,7 +56,7 @@ int main(void)
 	}
 
 	//--- Create a windowed mode window and its OpenGL context ---//
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	wWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL /* FULLSCREEN: glfwGetPrimaryMonitor()*/, NULL);
 	if (!window) {

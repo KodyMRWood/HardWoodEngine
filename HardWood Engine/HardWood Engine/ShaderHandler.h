@@ -81,7 +81,7 @@ WSHADER_H_FUNC std::string LoadShaderString(const char* file)
 	return retString;
 }
 
-WSHADER_H_FUNC GLuint InitShader(const GLenum &shaderType, const GLsizei &numStrings, const  GLchar* const* &shaderName, const GLint* &length)
+WSHADER_H_FUNC GLuint InitShader(const GLenum &shaderType, const GLsizei &numStrings, const  GLchar* const* shaderName, const GLint* length)
 {
 	GLuint vertex_shader = glCreateShader(shaderType);
 	glShaderSource(vertex_shader, numStrings, shaderName, length);
