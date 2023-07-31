@@ -49,24 +49,23 @@ int main(void)
 
 	glfwSetErrorCallback(Error_Callback);
 
-	/* Initialize the library */
+	//--- Initialize the library ---//
 	if (!glfwInit()) {
 		return -1;
 	}
 
-	/* Create a windowed mode window and its OpenGL context */
+	//--- Create a windowed mode window and its OpenGL context ---//
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL, NULL);
-	//window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWodo Engine", glfwGetPrimaryMonitor(), NULL); /* FULL SCREEN MODE */
-
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL /* FULLSCREEN: glfwGetPrimaryMonitor()*/, NULL);
 	if (!window) {
 		glfwTerminate();
 		return -1;
 	}
-	/* Make the window's context current */
+	//--- Make the window's context current ---//
 	glfwMakeContextCurrent(window);
 
+	//--- Check if GLEW was Initialized properly, must be dont after GLFW and Window creation ---//
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {
 		std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
@@ -74,30 +73,27 @@ int main(void)
 		return -1;
 	}
 
+	//--- Input Callback Function ---//
 	glfwSetKeyCallback(window, Key_Callback);
-	//PFNGLUSEPROGRAMPROC glUseProgram = (PFNGLUSEPROGRAMPROC) glfwGetProcAddress("glUseProgram");
+	
 	glfwSwapInterval(1);
 
-	// NOTE: OpenGL error checks have been omitted for brevity
-
+	//--- Generate Vertex Buffer ---//
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	// Create Vertex Shader
-	std::string tempVertShader = LoadShader(fileDirVertex);
-	static const char* vertexContents = tempVertShader.c_str();
-	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &vertexContents, NULL);
-	
+	//--- Create Vertex Shader ---//
+	static char* verCon = wLoadShader(fileDirVertex);
+	vertex_shader = wShaderInit(GL_VERTEX_SHADER, 1, &verCon, NULL);
 	if (!WShaderErrorCompiled(vertex_shader))
 	{
 		wShaderDelete(vertex_shader);
 		return -1;
 	}
 
-	// Create Fragment Shader
-	std::string tempFragShader = LoadShader(fileDirFragment);
-	static const char* fragmentContents = tempFragShader.c_str();
+	//--- Create Fragment Shader ---//
+	static char* fragmentContents = wLoadShader(fileDirFragment);
 	fragment_shader = wShaderInit(GL_FRAGMENT_SHADER, 1, &fragmentContents, NULL);
 	if (!WShaderErrorCompiled(fragment_shader))
 	{
@@ -105,11 +101,10 @@ int main(void)
 		return -1;
 	}
 
-	program = glCreateProgram();
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
-	glLinkProgram(program);
+	//--- Initialize Program and Attaching Shaders ---//
+	wInitProgram(program, vertex_shader, fragment_shader);
 
+	//---
 	mvp_location = glGetUniformLocation(program, "MVP");
 	vpos_location = glGetAttribLocation(program, "vPos");
 	vcol_location = glGetAttribLocation(program, "vCol");
@@ -139,7 +134,7 @@ int main(void)
 		mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		mat4x4_mul(mvp, p, m);
 
-		glUseProgram(program);
+		wUseProgram(program);
 		glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
