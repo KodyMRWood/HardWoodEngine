@@ -39,12 +39,12 @@ void Error_Callback(int error, const char* description)
 static void Key_Callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GLFW_TRUE);
+		wCloseWindow(window, GLFW_TRUE);
 }
+
 
 int main(void)
 {
-	GLFWwindow* window;
 	GLuint vertex_buffer, vertex_shader, fragment_shader, program;
 	GLint mvp_location, vpos_location, vcol_location;
 
@@ -57,14 +57,14 @@ int main(void)
 
 	//--- Create a windowed mode window and its OpenGL context ---//
 	wWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine", NULL /* FULLSCREEN: glfwGetPrimaryMonitor()*/, NULL);
+	wWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	GLFWwindow* window = wCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "HardWood Engine");
 	if (!window) {
 		glfwTerminate();
 		return -1;
 	}
 	//--- Make the window's context current ---//
-	glfwMakeContextCurrent(window);
+	wMakeCurrentContext(window);
 
 	//--- Check if GLEW was Initialized properly, must be dont after GLFW and Window creation ---//
 	GLenum err = glewInit();
@@ -105,7 +105,7 @@ int main(void)
 	//--- Initialize Program and Attaching Shaders ---//
 	wInitProgram(program, vertex_shader, fragment_shader);
 
-	//---
+	//--- Uniforms ---//
 	mvp_location = glGetUniformLocation(program, "MVP");
 	vpos_location = glGetAttribLocation(program, "vPos");
 	vcol_location = glGetAttribLocation(program, "vCol");
