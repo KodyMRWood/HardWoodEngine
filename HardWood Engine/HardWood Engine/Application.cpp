@@ -7,12 +7,14 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdio.h>
+#include <vector>
 
 //Proprietary
 #include "linmath.h"
+//#include "wMath.h"
 #include "ShaderHandler.h";
 #include "WindowHandler.h"
-//#include "wMath.h"
+#include "OBJLoader.h"
 
 static const struct
 {
@@ -82,6 +84,14 @@ int main(void)
 	//--- Generate Vertex Buffer ---//
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	std::vector<vec3> OBJvertices;
+	std::vector<vec2> OBJuvs;
+	std::vector<vec3> OBJnormals;
+	//bool res = LoadOBJ("cube.obj", OBJvertices, OBJuvs, OBJnormals);
+	//if (!res)
+	//{
+	//	return -1;
+	//}
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	//--- Create Vertex Shader ---//
