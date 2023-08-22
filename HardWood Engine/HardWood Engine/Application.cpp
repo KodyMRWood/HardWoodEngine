@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <glm.hpp>
 
 //Proprietary
 #include "linmath.h"
@@ -84,15 +85,19 @@ int main(void)
 	//--- Generate Vertex Buffer ---//
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	std::vector<vec3> OBJvertices;
-	std::vector<vec2> OBJuvs;
-	std::vector<vec3> OBJnormals;
-	//bool res = LoadOBJ("cube.obj", OBJvertices, OBJuvs, OBJnormals);
-	//if (!res)
-	//{
-	//	return -1;
-	//}
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	std::vector<glm::vec3> OBJvertices;
+	std::vector<glm::vec2> OBJuvs;
+	std::vector<glm::vec3> OBJnormals;
+	bool res = LoadOBJ("../HardWood Engine/Meshes/cube.obj", OBJvertices, OBJuvs, OBJnormals);
+	if (!res)
+	{
+		return -1;
+	}
+	glBufferData(GL_ARRAY_BUFFER, OBJvertices.size() * sizeof(glm::vec3), &OBJvertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, OBJuvs.size() * sizeof(glm::vec2), &OBJuvs[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, OBJnormals.size() * sizeof(glm::vec3), &OBJnormals[0], GL_STATIC_DRAW);
+	
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	//--- Create Vertex Shader ---//
 	static char* verCon = wLoadShader(fileDirVertex);
@@ -141,7 +146,7 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		mat4x4_identity(m);
-		mat4x4_rotate_Z(m, m, (float)glfwGetTime());
+		//mat4x4_rotate_Z(m, m, (float)glfwGetTime());
 		mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 		mat4x4_mul(mvp, p, m);
 

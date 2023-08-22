@@ -7,6 +7,7 @@
 */
 
 #include <vector>
+#include <glm.hpp>
 
 //Proprietary
 #include "linmath.h"
@@ -14,12 +15,12 @@
 
 
 
-static inline bool LoadOBJ(const char* filePath, std::vector<vec3>& out_vertices, std::vector<vec2>& out_uvs, std::vector<vec3>& out_normals)
+static inline bool LoadOBJ(const char* filePath, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs, std::vector<glm::vec3>& out_normals)
 {
 	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<vec3> temp_vertices;
-	std::vector<vec2> temp_uvs;
-	std::vector<vec3> temp_normals;
+	std::vector<glm::vec3> temp_vertices;
+	std::vector<glm::vec2> temp_uvs;
+	std::vector<glm::vec3> temp_normals;
 
 	FILE* file = fopen(filePath, "r");
 	if (file == NULL)
@@ -39,19 +40,19 @@ static inline bool LoadOBJ(const char* filePath, std::vector<vec3>& out_vertices
 
 		if (strcmp(lineHeader, "v") == 0)
 		{
-			vec3 vertex;
+			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex[0], &vertex[1], &vertex[2]);
 			temp_vertices.push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0)
 		{
-			vec2 uvs;
+			glm::vec2 uvs;
 			fscanf(file, "%f %f\n", &uvs[0], &uvs[1]);
 			temp_uvs.push_back(uvs);
 		}
 		else if (strcmp(lineHeader, "vn") == 0)
 		{
-			vec3 normal;
+			glm::vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal[0], &normal[1], &normal[2]);
 			temp_normals.push_back(normal);
 		}
@@ -81,22 +82,22 @@ static inline bool LoadOBJ(const char* filePath, std::vector<vec3>& out_vertices
 			for (unsigned int i = 0; i < vertexIndices.size(); ++i)
 			{
 				unsigned int vertexIndex = vertexIndices[i];
-				vec3 vertex;
-				vec3_dup(vertex, temp_vertices[vertexIndex - 1]); //vertex = temp_vertices[vertexIndex - 1];
+				glm::vec3 vertex;
+				vertex = temp_vertices[vertexIndex - 1];
 				out_vertices.push_back(vertex);
 			}
 			for (unsigned int i = 0; i < uvIndices.size(); ++i)
 			{
 				unsigned int uvIndex = uvIndices[i];
-				vec2 uv;
-				vec2_dup(uv, temp_uvs[uvIndex - 1]); //vertex = temp_vertices[uvIndex - 1];
+				glm::vec2 uv;
+				uv = temp_uvs[uvIndex - 1];
 				out_uvs.push_back(uv);
 			}
 			for (unsigned int i = 0; i < normalIndices.size(); ++i)
 			{
 				unsigned int normalIndex = normalIndices[i];
-				vec3 normal;
-				vec3_dup(normal, temp_normals [normalIndex - 1]); //vertex = temp_vertices[vertexIndex - 1];
+				glm::vec3 normal;
+				normal = temp_normals[normalIndex - 1];
 				out_normals.push_back(normal);
 			}
 		}
